@@ -1,0 +1,65 @@
+<%= form_with(model: @profile, url: user_profile_path(@user)) do |form| %>
+  <% if @profile.errors.any? %>
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+      <h2 class="font-bold">The following errors prevented the profile from being saved:</h2>
+      <ul>
+        <% @profile.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form.label :username %>
+  <%= form.text_field :username %>
+
+  <%= form.label :birthday %>
+  <%= form.date_field :birthday %>
+
+  <%= form.label :location %>
+  <%= form.text_field :location %>    
+
+<%= form.label :gender %>
+<%= form.select :gender, 
+      [["Male", "male"], 
+       ["Female", "female"], 
+       ["Other", "other"]], 
+      { selected: @profile.gender.in?(["male", "female"]) ? @profile.gender : "other" },
+      { id: "gender-select", onchange: "toggleCustomGenderField()" } %>
+
+<div>
+  <%= form.label :custom_field, "If Other, Specify" %>
+  <%= text_field_tag 'profile[custom_field]', 
+        @profile.gender.in?(["male", "female"]) ? "" : @profile.gender, 
+        id: "custom-gender", 
+        placeholder: "Specify your gender", 
+        disabled: @profile.gender.in?(["male", "female"]) %>
+</div>
+
+
+  <%= form.label :bio %>
+  <%= form.text_field :bio %>
+
+  <%= form.label :avatar_url %>
+  <%= form.text_field :avatar_url %><br>
+
+
+  <%= form.submit %>
+<% end %>
+
+<script>
+  function toggleCustomGenderField() {
+    const genderSelect = document.getElementById("gender-select");
+    const customGenderField = document.getElementById("custom-gender");
+
+    if (genderSelect.value === "other") {
+      customGenderField.disabled = false;
+    } else {
+      customGenderField.disabled = true;
+      customGenderField.value = ""; // Clear the custom gender if not 'Other'
+    }
+  }
+
+  // Initialize on page load
+  document.addEventListener("DOMContentLoaded", toggleCustomGenderField);
+</script>

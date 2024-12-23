@@ -1,0 +1,76 @@
+<div class="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg mt-6">
+  <h2 class="text-2xl font-bold text-gray-800 mb-6">Edit Profile</h2>
+
+  <% if @profile.errors.any? %>
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6">
+      <h3 class="font-bold">Errors</h3>
+      <ul class="list-disc list-inside">
+        <% @profile.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form_with(model: @profile, url: user_profile_path(@user), class: "space-y-6") do |form| %>
+    <div>
+      <%= form.label :username, "Username", class: "block text-sm font-medium text-gray-700" %>
+      <%= form.text_field :username, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
+    </div>
+
+    <div>
+      <%= form.label :birthday, "Birthday", class: "block text-sm font-medium text-gray-700" %>
+      <%= form.date_field :birthday, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
+    </div>
+
+    <div>
+      <%= form.label :location, "Location", class: "block text-sm font-medium text-gray-700" %>
+      <%= form.text_field :location, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
+    </div>
+
+    <div>
+      <%= form.label :gender, "Gender", class: "block text-sm font-medium text-gray-700" %>
+      <%= form.select :gender, 
+            [["Male", "male"], 
+             ["Female", "female"], 
+             ["Other", "other"]], 
+            { selected: @profile.gender.in?(["male", "female"]) ? @profile.gender : "other" },
+            { id: "gender-select", class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm", onchange: "toggleCustomGenderField()" } %>
+    </div>
+
+    <div>
+      <%= form.label :custom_field, "If Other, Specify", class: "block text-sm font-medium text-gray-700" %>
+      <%= text_field_tag 'profile[custom_field]', 
+            @profile.gender.in?(["male", "female"]) ? "" : @profile.gender, 
+            id: "custom-gender", 
+            class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm", 
+            placeholder: "Specify your gender", 
+            disabled: @profile.gender.in?(["male", "female"]) %>
+    </div>
+
+    <div>
+      <%= form.label :bio, "Bio", class: "block text-sm font-medium text-gray-700" %>
+      <%= form.text_field :bio, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
+    </div>
+
+    <div>
+      <%= form.label :avatar_url, "Avatar URL", class: "block text-sm font-medium text-gray-700" %>
+      <%= form.text_field :avatar_url, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
+    </div>
+
+    <div>
+      <%= form.submit "Save", class: "px-4 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" %>
+    </div>
+  <% end %>
+</div>
+
+<script>
+  function toggleCustomGenderField() {
+    const genderSelect = document.getElementById("gender-select");
+    const customGenderField = document.getElementById("custom-gender");
+
+    if (genderSelect.value === "other") {
+      customGenderField.disabled = false;
+    } else {
+      customGenderField.disabled = true;
+      customGenderField.value = "";

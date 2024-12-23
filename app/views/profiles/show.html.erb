@@ -1,0 +1,46 @@
+<div class="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg mt-6">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-2xl font-bold text-gray-800">Profile</h2>
+    <% if current_user == @profile.user %>
+      <%= link_to 'Edit Profile', edit_user_profile_path(@profile.user), 
+                  class: 'bg-blue-500 text-white px-4 py-2 rounded-md shadow hover:bg-blue-600' %>
+    <% end %>
+  </div>
+  <div class="flex items-center space-x-4 mb-6">
+    <div class="w-16 h-16 rounded-full overflow-hidden">
+      <img src="<%= @profile.avatar_url.presence || '/default-avatar.png' %>" alt="Avatar" class="w-full h-full object-cover">
+    </div>
+    <div>
+      <p class="text-lg font-medium text-gray-900">
+        <%= @profile.username.presence || @profile.user.email %>
+      </p>
+      <p class="text-sm text-gray-600"><%= @profile.user.email %></p>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <p class="text-sm text-gray-500 font-medium">Bio:</p>
+      <p class="text-gray-800"><%= @profile.bio.presence || "No bio provided" %></p>
+    </div>
+    <div>
+      <p class="text-sm text-gray-500 font-medium">Gender:</p>
+      <p class="text-gray-800"><%= @profile.gender.presence || "Not specified" %></p>
+    </div>
+    <div>
+      <p class="text-sm text-gray-500 font-medium">Age:</p>
+      <p class="text-gray-800">
+        <%# if @profile.birthday %>
+          <%#= ((Time.zone.now - @profile.birthday.to_time) / 1.year.seconds).floor %> 
+          <%= to_age @profile.birthday %> 
+        <%# else %>
+          <!-- Not specified -->
+        <%# end %>
+      </p>
+    </div>
+    <div>
+      <p class="text-sm text-gray-500 font-medium">Location:</p>
+      <p class="text-gray-800"><%= @profile.location.presence || "Not specified" %></p>
+    </div>
+  </div>
+</div>
