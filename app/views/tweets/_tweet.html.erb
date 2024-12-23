@@ -1,0 +1,16 @@
+<article id="<%= dom_id(tweet) %>">
+  <nav>
+    <h6><%= tweet.user.email %></h6>
+    <time><%= time_ago_in_words(tweet.created_at) %> ago</time>
+  </nav>
+  <p><%= tweet.content %></p>
+  <div class="actions">
+      <%#= turbo_frame_tag dom_id(tweet, 'actions') do %>
+      <%# end %>
+    <% if from_stream %>
+      <%= turbo_frame_tag dom_id(tweet, 'actions'), src: actions_tweet_path(tweet) %>
+    <% else %>
+      <%= render 'actions', tweet: tweet %>
+    <% end %>
+  </div>
+</article>

@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+  resources :tweets do
+    member do
+      get :actions
+    end
+  end
   resources :friendships
   devise_for :users
   resources :posts

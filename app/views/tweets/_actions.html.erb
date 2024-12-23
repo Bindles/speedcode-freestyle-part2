@@ -1,0 +1,11 @@
+
+  <%= turbo_frame_tag dom_id(tweet, 'actions') do %>
+  <% if current_user == tweet.user %>
+  <%# if current_user.admin? || current_user == tweet.user %>
+  EZ  
+    <%= link_to 'Delete', tweet, data: { turbo_confirm: 'Are you sure?', turbo_method: :delete } %>
+  <% else %>
+    HAS NO ACTIONS
+  <% end %>
+
+<% end %>

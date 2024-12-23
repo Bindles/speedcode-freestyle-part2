@@ -1,0 +1,11 @@
+<p style="color: green"><%= notice %></p>
+
+<% content_for :title, "Tweets" %>
+
+<%= turbo_stream_from :tweets %>
+
+<%= button_to 'New Tweet', new_tweet_path, method: :get %>
+<span id="counter"></span>
+<div id="tweets">
+  <%= render @tweets, from_stream: false %>
+</div>
