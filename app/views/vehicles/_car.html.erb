@@ -1,0 +1,18 @@
+<table class="min-w-full bg-white border border-gray-200">
+  <thead>
+    <tr>
+      <th class="px-4 py-2">Make</th>
+      <th class="px-4 py-2">Color</th>
+      <th class="px-4 py-2">Other attributes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% vehicles.each do |vehicle| %>
+      <tr>
+        <td class="px-4 py-2"><%= vehicle.make %></td>
+        <td class="px-4 py-2"><%= vehicle.color %></td>
+        <td class="px-4 py-2">Other vehicle details</td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

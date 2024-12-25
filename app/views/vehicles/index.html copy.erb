@@ -1,0 +1,74 @@
+<div class="container mx-auto p-4">
+  <div class="mb-4">
+    <%= form_with url: vehicles_path, method: :get, local: true, class: "flex space-x-4" do |f| %>
+      <div>
+        <%= f.label :color, "Filter by Color", class: "block", id: "filterColor" %>
+        <%= f.select :color, Vehicle.pluck(:color).uniq, include_blank: "All Colors", class: "form-select mt-1" %>
+      </div>
+      <div>
+        <%= f.label :make, "Filter by Make", class: "block" %>
+        <%= f.select :make, Vehicle.pluck(:make).uniq, include_blank: "All Makes", class: "form-select mt-1", id: "filterMake"  %>
+      </div>
+      <div>
+        <%= f.submit "Filter", class: "bg-blue-500 text-white p-2 rounded-md" %>
+      </div>
+    <% end %>
+  </div>
+
+  <table class="min-w-full table-auto border-collapse">
+    <thead class="bg-gray-100">
+      <tr>
+        <th class="px-4 py-2 border-b">Make</th>
+        <th class="px-4 py-2 border-b">Model</th>
+        <th class="px-4 py-2 border-b">Color</th>
+        <th class="px-4 py-2 border-b">Price</th>
+        <th class="px-4 py-2 border-b">Type</th>
+        <th class="px-4 py-2 border-b">Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @vehicles.each do |vehicle| %>
+        <tr>
+          <td class="px-4 py-2 border-b"><%= vehicle.make %></td>
+          <td class="px-4 py-2 border-b"><%= vehicle.model %></td>
+          <td class="px-4 py-2 border-b"><%= vehicle.color %></td>
+          <td class="px-4 py-2 border-b"><%= number_to_currency(vehicle.price) %></td>
+          <td class="px-4 py-2 border-b"><%= vehicle.type %></td>
+          <td class="px-4 py-2 border-b">
+            <% if vehicle.type == "Car" %>
+              <%= "Size: #{vehicle.size}, Engine: #{vehicle.engine_size}" %>
+            <% elsif vehicle.type == "Bike" %>
+              <%= "Top Speed: #{vehicle.top_speed} mph" %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const filterVehicles = () => {
+    const url = new URL(window.location.href);
+    url.searchParams.set('color', document.getElementById('filterColor').value);
+    url.searchParams.set('make', document.getElementById('filterMake').value);
+
+    fetch(url, {
+      method: 'GET',
+    })
+    .then(response => response.text())
+    .then(text => {
+      document.getElementById('vehicleTable').innerHTML = text; // Update the table
+      window.history.pushState({}, '', url); // Update the URL in the browser's history
+    })
+    .catch(error => console.error('Error fetching filtered vehicles:', error));
+  };
+
+  // Listen for changes to the filter inputs and trigger the filtering
+  document.getElementById('filterColor').addEventListener('change', filterVehicles);
+  document.getElementById('filterMake').addEventListener('change', filterVehicles);
+});
+
+</script>

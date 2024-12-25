@@ -1,0 +1,67 @@
+<head>
+  <meta name="turbo-refresh-method" content="morph">
+</head>
+
+<%#= turbo_stream_from 'vehicles' %>
+
+<%= form_with url: vehicles_path, method: :get, data: { turbo: true } do %>
+  <div>
+    <label for="filterColor">Color:</label>
+    <%= select_tag :color, options_for_select(Vehicle.distinct.pluck(:color), params[:color]), prompt: "Select a Color" %>
+  </div>
+
+  <div>
+    <label for="filterMake">Make:</label>
+    <%= select_tag :make, options_for_select(Vehicle.distinct.pluck(:make), params[:make]), prompt: "Select a Make" %>
+  </div>
+
+  <%= submit_tag "Filter" %>
+<% end %>
+
+  <!-- Add the id "vehicleTable" to the table for JS interaction -->
+  <table id="vehicleTable" class="min-w-full table-auto border-collapse">
+    <thead class="bg-gray-100">
+      <tr>
+        <th class="px-4 py-2 border-b">Make</th>
+        <th class="px-4 py-2 border-b">Model</th>
+        <th class="px-4 py-2 border-b">Color</th>
+        <th class="px-4 py-2 border-b">Price</th>
+        <th class="px-4 py-2 border-b">Type</th>
+        <th class="px-4 py-2 border-b">Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @vehicles.each do |vehicle| %>
+        <tr>
+          <td class="px-4 py-2 border-b"><%= vehicle.make %></td>
+          <td class="px-4 py-2 border-b"><%= vehicle.model %></td>
+          <td class="px-4 py-2 border-b"><%= vehicle.color %></td>
+          <td class="px-4 py-2 border-b"><%= number_to_currency(vehicle.price) %></td>
+          <td class="px-4 py-2 border-b"><%= vehicle.type %></td>
+          <td class="px-4 py-2 border-b">
+            <% if vehicle.type == "Car" %>
+              <%= "Size: #{vehicle.size}, Engine: #{vehicle.engine_size}" %>
+            <% elsif vehicle.type == "Bike" %>
+              <%= "Top Speed: #{vehicle.top_speed} mph" %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<script>
+const filterVehicles = () => {
+  const url = new URL(window.location.href); // Corrected: `Url` to `URL`
+  url.searchParams.set('color', document.getElementById('filterColor').value); // Corrected: `coducment` to `document` and `searchParms` to `searchParams`
+  url.searchParams.set('make', document.getElementById('filterMake').value); // Same correction
+
+  fetch(url, { headers: {'xxx': true}})
+    .then(response => response.text())
+    .then(text => {
+      document.getElementById('vehicleTable').innerHTML = text; // Corrected: `docuemnt` to `document` and `verhicleTable` to `vehicleTable`
+      window.history.pushState({}, '', url);
+    });
+};
+</script>

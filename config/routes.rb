@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  resources :vehicles do
+    collection do
+      get :indexb
+      get :indexm      
+    end
+  end
   resources :tweets do
     member do
       get :actions

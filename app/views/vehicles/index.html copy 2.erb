@@ -1,0 +1,64 @@
+<div class="container mx-auto p-4">
+  <div class="mb-4">
+    <%= form_with url: vehicles_path, id: "hey", method: :get, local: true, class: "flex space-x-4" do |f| %>
+<%= f.label :color, "Filter by Color", class: "block", id: "filterColorLabel" %>
+<%= f.select :color, options_for_select([['Red', 'red'], ['Blue', 'blue']]), { id: 'filterColor' }, { onchange: "filterVehicles()" } %>
+
+<%= f.label :make, "Filter by Make", class: "block", id: "filterMakeLabel" %>
+<%= f.select :make, options_for_select([['Toyota', 'toyota'], ['Ford', 'ford']]), { id: 'filterMake' }, { onchange: "filterVehicles()" } %>
+
+      <div>
+        <%= f.submit "Filter", class: "bg-blue-500 text-white p-2 rounded-md" %>
+      </div>
+    <% end %>
+  </div>
+
+  <table class="min-w-full table-auto border-collapse">
+    <thead class="bg-gray-100">
+      <tr>
+        <th class="px-4 py-2 border-b">Make</th>
+        <th class="px-4 py-2 border-b">Model</th>
+        <th class="px-4 py-2 border-b">Color</th>
+        <th class="px-4 py-2 border-b">Price</th>
+        <th class="px-4 py-2 border-b">Type</th>
+        <th class="px-4 py-2 border-b">Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @vehicles.each do |vehicle| %>
+        <tr>
+          <td class="px-4 py-2 border-b"><%= vehicle.make %></td>
+          <td class="px-4 py-2 border-b"><%= vehicle.model %></td>
+          <td class="px-4 py-2 border-b"><%= vehicle.color %></td>
+          <td class="px-4 py-2 border-b"><%= number_to_currency(vehicle.price) %></td>
+          <td class="px-4 py-2 border-b"><%= vehicle.type %></td>
+          <td class="px-4 py-2 border-b">
+            <% if vehicle.type == "Car" %>
+              <%= "Size: #{vehicle.size}, Engine: #{vehicle.engine_size}" %>
+            <% elsif vehicle.type == "Bike" %>
+              <%= "Top Speed: #{vehicle.top_speed} mph" %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+
+<script>
+const filterVehicles = () => {
+  const url = new URL(window.location.href); // Corrected: `Url` to `URL`
+  url.searchParams.set('color', document.getElementById('filterColor').value); // Corrected: `coducment` to `document` and `searchParms` to `searchParams`
+  url.searchParams.set('make', document.getElementById('filterMake').value); // Same correction
+
+  fetch(url, {})
+    .then(response => response.text())
+    .then(text => {
+      document.getElementById('vehicleTable').innerHTML = text; // Corrected: `docuemnt` to `document` and `verhicleTable` to `vehicleTable`
+      window.history.pushState({}, '', url);
+    });
+};
+
+
+</script>

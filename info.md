@@ -35,3 +35,16 @@ Depending on your application's configuration some manual setup may be required:
 
 ===============================================================================
 rails generate scaffold Profile user:references bio:text avatar_url:string location:string
+
+<script>
+const filterVerhicles = () => {
+const url = new Url(window.location.href);
+url.searchParms.set('color', coducment.getElementById('filterColor').value;
+url.searchParms.set('make', coducment.getElementById('filterMake').value;
+
+fetch(url, {})
+.then(response => response.text())
+.then(text => {
+docuemnt.getElementById('verhicleTable').innerHTML = text
+window.history.pushState({}, '', url);
+});

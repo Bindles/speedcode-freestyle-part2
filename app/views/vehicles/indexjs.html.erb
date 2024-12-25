@@ -1,0 +1,74 @@
+<div class="container mx-auto p-4">
+  <div class="mb-4">
+    <form action="<%= vehicles_path %>" method="get" class="flex space-x-4">
+      <div>
+        <label for="filterColor" class="block">Filter by Color</label>
+        <select id="filterColor" name="color" class="form-select mt-1" onchange="filterVehicles()">
+          <option value="">All Colors</option>
+          <option value="Red">Red</option>
+          <option value="Blue">Blue</option>
+          <!-- Add your dynamic colors here -->
+        </select>
+      </div>
+      <div>
+        <label for="filterMake" class="block">Filter by Make</label>
+        <select id="filterMake" name="make" class="form-select mt-1" onchange="filterVehicles()">
+          <option value="">All Makes</option>
+          <option value="Toyota">Toyota</option>
+          <option value="Ford">Ford</option>
+          <!-- Add your dynamic makes here -->
+        </select>
+      </div>
+      <div>
+        <input type="submit" value="Filter" class="bg-blue-500 text-white p-2 rounded-md">
+      </div>
+    </form>
+  </div>
+
+  <!-- Add the id "vehicleTable" to the table for JS interaction -->
+  <table id="vehicleTable" class="min-w-full table-auto border-collapse">
+    <thead class="bg-gray-100">
+      <tr>
+        <th class="px-4 py-2 border-b">Make</th>
+        <th class="px-4 py-2 border-b">Model</th>
+        <th class="px-4 py-2 border-b">Color</th>
+        <th class="px-4 py-2 border-b">Price</th>
+        <th class="px-4 py-2 border-b">Type</th>
+        <th class="px-4 py-2 border-b">Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @vehicles.each do |vehicle| %>
+        <tr>
+          <td class="px-4 py-2 border-b"><%= vehicle.make %></td>
+          <td class="px-4 py-2 border-b"><%= vehicle.model %></td>
+          <td class="px-4 py-2 border-b"><%= vehicle.color %></td>
+          <td class="px-4 py-2 border-b"><%= number_to_currency(vehicle.price) %></td>
+          <td class="px-4 py-2 border-b"><%= vehicle.type %></td>
+          <td class="px-4 py-2 border-b">
+            <% if vehicle.type == "Car" %>
+              <%= "Size: #{vehicle.size}, Engine: #{vehicle.engine_size}" %>
+            <% elsif vehicle.type == "Bike" %>
+              <%= "Top Speed: #{vehicle.top_speed} mph" %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<script>
+const filterVehicles = () => {
+  const url = new URL(window.location.href); // Corrected: `Url` to `URL`
+  url.searchParams.set('color', document.getElementById('filterColor').value); // Corrected: `coducment` to `document` and `searchParms` to `searchParams`
+  url.searchParams.set('make', document.getElementById('filterMake').value); // Same correction
+
+  fetch(url, { headers: {'xxx': true}})
+    .then(response => response.text())
+    .then(text => {
+      document.getElementById('vehicleTable').innerHTML = text; // Corrected: `docuemnt` to `document` and `verhicleTable` to `vehicleTable`
+      window.history.pushState({}, '', url);
+    });
+};
+</script>

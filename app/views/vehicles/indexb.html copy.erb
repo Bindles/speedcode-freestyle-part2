@@ -1,0 +1,84 @@
+<%= turbo_stream_from 'vehicles' %>
+
+<%= form_with url: vehicles_path, method: :get, data: { turbo: true } do %>
+  <div>
+    <label for="filterColor">Color:</label>
+    <%= select_tag :color, options_for_select(Vehicle.distinct.pluck(:color), params[:color]), prompt: "Select a Color" %>
+  </div>
+
+  <div>
+    <label for="filterMake">Make:</label>
+    <%= select_tag :make, options_for_select(Vehicle.distinct.pluck(:make), params[:make]), prompt: "Select a Make" %>
+  </div>
+
+  <%= submit_tag "Filter" %>
+<% end %>
+
+<%#= turbo_stream.replace "vehicleTable" do %>
+  <table id="vehicleTable">
+    <thead>
+      <tr>
+        <th>Make</th>
+        <th>Model</th>
+        <th>Color</th>
+        <th>Price</th>
+        <th>Type</th>
+        <th>Type Specific Details</th>                
+      </tr>
+    </thead>
+ <tbody>
+      <% @vehicles.each do |vehicle| %>
+        <tr>
+          <td class="px-4 py-2 border-b"><%= vehicle.make %></td>
+          <td class="px-4 py-2 border-b"><%= vehicle.model %></td>
+          <td class="px-4 py-2 border-b"><%= vehicle.color %></td>
+          <td class="px-4 py-2 border-b"><%= number_to_currency(vehicle.price) %></td>
+          <td class="px-4 py-2 border-b"><%= vehicle.type %></td>
+          <td class="px-4 py-2 border-b">
+            <% if vehicle.type == "Car" %>
+              <%= "Size: #{vehicle.size}, Engine: #{vehicle.engine_size}" %>
+            <% elsif vehicle.type == "Bike" %>
+              <%= "Top Speed: #{vehicle.top_speed} mph" %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<%# end %>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const filterVehicles = () => {
+    const url = new URL(window.location.href);
+    const colorSelector = document.querySelector('[name="color"]'); // Adjust selector to match your form
+    const makeSelector = document.querySelector('[name="make"]'); // Adjust selector to match your form
+
+    if (colorSelector) {
+      url.searchParams.set('color', colorSelector.value);
+    }
+    if (makeSelector) {
+      url.searchParams.set('make', makeSelector.value);
+    }
+
+    fetch(url, {
+      method: 'GET',
+    })
+      .then(response => response.text())
+      .then(text => {
+        document.getElementById('vehicleTable').innerHTML = text; // Update the table
+        window.history.pushState({}, '', url); // Update the URL in the browser's history
+      })
+      .catch(error => console.error('Error fetching filtered vehicles:', error));
+  };
+
+  // Attach event listeners to the filter inputs
+  const colorSelector = document.querySelector('[name="color"]');
+  const makeSelector = document.querySelector('[name="make"]');
+  if (colorSelector) colorSelector.addEventListener('change', filterVehicles);
+  if (makeSelector) makeSelector.addEventListener('change', filterVehicles);
+});
+
+
+</script>
