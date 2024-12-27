@@ -1,0 +1,7 @@
+<p style="color: green"><%= notice %></p>
+
+<!-- app/views/notes/show.html.erb -->
+<h1>Note Details</h1>
+<%= turbo_stream_from @note %>
+<p><%= @note.title %></p>
+<p><%= @note.content %></p>

@@ -1,0 +1,129 @@
+<style>
+.sortable-board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.sortable-item {
+  background-color: #f0f0f0;
+  padding: 20px;
+  position: relative;
+  border: 1px solid #ccc;
+}
+
+.drop-zone {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30%;
+  background-color: rgba(0, 0, 255, 0.2);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.drop-zone.active {
+  opacity: 1;
+}
+
+</style>
+
+<p style="color: green"><%= notice %></p>
+
+<% content_for :title, "Notes" %>
+
+<!-- app/views/notes/index.html.erb -->
+<h1>Notes</h1>
+<%= link_to "New note", new_note_path %>
+
+
+<%= link_to 'New Note', new_note_path %>
+
+<div id="note-list">
+
+  <ul id="sortable-lista">
+    <% @notes.each do |note| %>
+      <li id="note_<%= note.id %>" data-id="<%= note.id %>" data-position="<%= note.position %>" class="sortable-item">
+        <%= note.title %>
+        <%= note.content %>
+        <%= link_to 'Edit', edit_note_path(note) %> |
+        <%= link_to 'Destroy', note, method: :delete, data: { confirm: 'Are you sure?' } %>
+      </li>
+    <% end %>
+  </ul>
+</div>
+
+<ul id="sortable-list">
+  <li class="sortable-item">Item 1</li>
+  <li class="sortable-item">Item 2</li>
+  <li class="sortable-item">Item 3</li>
+  <li class="sortable-item">Item 4</li>
+</ul>
+
+<div id="sortable-board" class="sortable-board">
+  <div class="sortable-item">
+    <span>Item 1</span>
+    <div class="drop-zone"></div>
+  </div>
+  <div class="sortable-item">
+    <span>Item 2</span>
+    <div class="drop-zone"></div>
+  </div>
+  <div class="sortable-item">
+    <span>Item 3</span>
+    aa
+    <div class="drop-zone">asasas</div>
+  </div>
+  <div class="sortable-item">
+    <span>Item 4</span>
+    <div class="drop-zone"></div>
+  </div>
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const board = document.getElementById('sortable-board');
+
+  // Initialize SortableJS
+  new Sortable(board, {
+    animation: 150,
+    ghostClass: 'sortable-ghost',
+    onEnd: function (evt) {
+      console.log(`Item moved from ${evt.oldIndex} to ${evt.newIndex}`);
+    },
+  });
+
+  // Handle drop zones for "sticking"
+  document.querySelectorAll('.sortable-item').forEach((item) => {
+    const dropZone = item.querySelector('.drop-zone');
+
+    // Show drop zone when dragging
+    item.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('active');
+    });
+
+    // Hide drop zone when not dragging
+    item.addEventListener('dragleave', () => {
+      dropZone.classList.remove('active');
+    });
+
+    // Handle drop onto the drop zone
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const dragged = document.querySelector('.sortable-ghost');
+      if (dragged) {
+        dropZone.classList.remove('active');
+        item.appendChild(dragged); // Stick dragged item to this item
+        console.log(`Item ${dragged.innerText} stuck to ${item.innerText}`);
+      }
+    });
+  });
+});
+
+
+</script>
+
+

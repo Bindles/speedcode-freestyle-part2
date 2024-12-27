@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :notes
   resources :products
   resources :items
   get "pagesindex" => "pages#index"

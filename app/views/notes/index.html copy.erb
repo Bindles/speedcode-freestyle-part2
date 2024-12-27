@@ -1,0 +1,90 @@
+<style>
+.sortable-board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 items per row */
+  gap: 10px;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.sortable-item {
+  padding: 10px;
+  background-color: #f3f3f3;
+  border: 1px solid #ddd;
+  text-align: center;
+  cursor: grab;
+}
+
+.sortable-ghost {
+  opacity: 0.5;
+  background-color: #eee;
+}
+
+</style>
+
+<p style="color: green"><%= notice %></p>
+
+<% content_for :title, "Notes" %>
+
+<!-- app/views/notes/index.html.erb -->
+<h1>Notes</h1>
+<%= link_to "New note", new_note_path %>
+
+
+<%= link_to 'New Note', new_note_path %>
+
+<div id="note-list">
+
+  <ul id="sortable-lista">
+    <% @notes.each do |note| %>
+      <li id="note_<%= note.id %>" data-id="<%= note.id %>" data-position="<%= note.position %>" class="sortable-item">
+        <%= note.title %>
+        <%= note.content %>
+        <%= link_to 'Edit', edit_note_path(note) %> |
+        <%= link_to 'Destroy', note, method: :delete, data: { confirm: 'Are you sure?' } %>
+      </li>
+    <% end %>
+  </ul>
+</div>
+
+<ul id="sortable-list">
+  <li class="sortable-item">Item 1</li>
+  <li class="sortable-item">Item 2</li>
+  <li class="sortable-item">Item 3</li>
+  <li class="sortable-item">Item 4</li>
+</ul>
+
+<div id="sortable-board" class="sortable-board">
+  <div class="sortable-item">Item 1</div>
+  <div class="sortable-item">Item 2</div>
+  <div class="sortable-item">Item 3</div>
+  <div class="sortable-item">Item 4</div>
+  <div class="sortable-item">Item 5</div>
+  <div class="sortable-item">Item 6</div>
+  <div class="sortable-item">Item 7</div>
+  <div class="sortable-item">Item 8</div>
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const board = document.getElementById('sortable-board');
+
+  const sortable = new Sortable(board, {
+    animation: 150,
+    ghostClass: 'sortable-ghost',
+    forceFallback: true, // Ensures consistent drag behavior
+    dragClass: 'sortable-drag', // Class for the item being dragged
+    fallbackOnBody: true, // Allows dragging even when constrained
+    fallbackTolerance: 5, // Tolerance for fallback mode
+    onEnd: function (evt) {
+      console.log('Item moved from', evt.oldIndex, 'to', evt.newIndex);
+    },
+  });
+});
+
+
+</script>
+
+
