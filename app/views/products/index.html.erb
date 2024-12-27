@@ -1,0 +1,22 @@
+<p style="color: green"><%= notice %></p>
+
+<% content_for :title, "Products" %>
+
+<!-- app/views/products/index.html.erb -->
+<h1>Product Grid</h1>
+
+
+
+<div data-controller="infinite-scroll">
+  <div id="product-grid">
+  <%#= turbo_frame_tag "product_grid" do %>
+    <%= render partial: "product_list", locals: { products: @products, page: 1 } %>
+  <%# end %>
+  </div>
+  <div class="ProductGrid_end" data-infinite-scroll-target="end"></div>
+</div>
+
+
+
+<%= link_to "New product", new_product_path %>
+

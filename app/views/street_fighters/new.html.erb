@@ -1,0 +1,11 @@
+<% content_for :title, "New street fighter" %>
+
+<h1>New street fighter</h1>
+
+<%= render "form", street_fighter: @street_fighter %>
+
+<br>
+
+<div>
+  <%= link_to "Back to street fighters", street_fighters_path %>
+</div>

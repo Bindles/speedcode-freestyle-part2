@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @street_fighter %>
+
+<div>
+  <%= link_to "Edit this street fighter", edit_street_fighter_path(@street_fighter) %> |
+  <%= link_to "Back to street fighters", street_fighters_path %>
+
+  <%= button_to "Destroy this street fighter", @street_fighter, method: :delete %>
+</div>

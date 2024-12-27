@@ -1,8 +1,13 @@
 Rails.application.routes.draw do
+  resources :products
+  resources :items
+  get "pagesindex" => "pages#index"
+  root "pages#index"
+  resources :street_fighters
   resources :vehicles do
     collection do
       get :indexb
-      get :indexm      
+      get :indexm
     end
   end
   resources :tweets do

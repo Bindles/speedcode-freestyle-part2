@@ -1,0 +1,18 @@
+    ft
+  <%= turbo_frame_tag "street_fighters_data" do %>
+    <div class="flex items-center p-3 bg-blue-400 text-black space-x-6 rounded">
+      <%= link_to "Character", street_fighters_path(column: "character", direction: direction), class: "underline", data: { turbo_frame: "street_fighters_data" } %>
+      <%= filter_arrow("character") %>
+      <%= link_to "Move", street_fighters_path(column: "move",  direction: direction), class: "underline" %>
+      <%= filter_arrow("move") %>
+      <%= link_to "Reset filter", street_fighters_path, class: "underline" %>
+    </div>
+    <div id="street_fighters" class="divide-y dark:text-slate-700 mb-10">
+      <% @street_fighters.each do |street_fighter| %>
+        <div class="py-3">
+          <%= render street_fighter %>
+          <%= link_to "View street_fighter", street_fighter, class: "text-underline inline-block my-3", data: { turbo: false } %>
+        </div>
+      <% end %>
+    </div>
+    <% end %>

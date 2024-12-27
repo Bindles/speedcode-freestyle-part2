@@ -1,0 +1,77 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="<%= csrf_meta_tags %>">
+  <title>Inline Editing with Data-Star</title>
+  <!-- Add the Data-Star library directly in a script tag -->
+  <script src="https://cdn.jsdelivr.net/npm/data-star@latest"></script>
+</head>
+<body>
+  <div id="post_1" 
+       data-signals="{
+         title: 'Post Title',
+         content: '<%= @post.content %>',
+         imageUrl: 'https://example.com/image.jpg'
+       }">
+    <div class="form-control">
+      <label>Title</label>
+      <input type="text" data-bind="title" />
+    </div>
+    <div class="form-control">
+      <label>Content</label>
+      <textarea data-bind="content"></textarea>
+    </div>
+    <div class="form-control">
+      <label>Image URL</label>
+      <input type="text" data-bind="imageUrl" />
+    </div>
+    <div>
+      <button id="saveButton" data-on-click="saveData()">
+        Save
+      </button>
+      <button data-on-click="sse('/posts/1')">
+        Cancel
+      </button>
+    </div>
+  </div>
+
+  <!-- Add a script to activate Data-Star interactions -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const saveButton = document.getElementById('saveButton');
+      const signalsElement = document.getElementById('post_1');
+
+      // Get CSRF token from meta tag
+      const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+      saveButton.addEventListener('click', async () => {
+        const postData = {
+          title: signalsElement.querySelector('[data-bind="title"]').value,
+          content: signalsElement.querySelector('[data-bind="content"]').value,
+          imageUrl: signalsElement.querySelector('[data-bind="imageUrl"]').value
+        };
+
+        // Send PUT request with CSRF token in the headers
+        const response = await fetch('/posts/1', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': csrfToken  // Add CSRF token here
+          },
+          body: JSON.stringify(postData)
+        });
+
+        if (response.ok) {
+          console.log('Data saved successfully');
+        } else {
+          console.error('Error saving data');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

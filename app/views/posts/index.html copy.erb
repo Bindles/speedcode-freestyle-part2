@@ -1,0 +1,77 @@
+<p style="color: green"><%= notice %></p>
+
+<% content_for :title, "Posts" %>
+
+<h1>Posts</h1>
+
+<div id="posts">
+  <% @posts.each do |post| %>
+<!-- app/views/posts/index.html.erb -->
+<div id="post_<%= post.id %>"
+     data-signals="{
+       id: <%= post.id %>,
+       title: '<%= post.title %>',
+       content: '<%= post.content %>',
+       imageUrl: '<%= post.image_url %>'
+     }">
+  
+  <!-- Display Post Details -->
+  <div class="form-control">
+    <label>Title</label>
+    <span><%= post.title %></span>
+  </div>
+  <div class="form-control">
+    <label>Content</label>
+    <span><%= post.content %></span>
+  </div>
+  <div class="form-control">
+    <label>Image URL</label>
+    <span><%= post.image_url %></span>
+  </div>
+
+  <!-- Edit Buttons -->
+  <button data-on-click="sse('/posts/<%= post.id %>/edit')">
+    Edit
+  </button>
+  <button data-on-click="sse('/posts/<%= post.id %>/reset')">
+    Reset
+  </button>
+
+  <!-- Inline Editing Form (hidden initially) -->
+  <div id="post_<%= post.id %>_edit" style="display:none;">
+    <div class="form-control">
+      <label>Title</label>
+      <input type="text" data-bind="title" />
+    </div>
+    <div class="form-control">
+      <label>Content</label>
+      <textarea data-bind="content"></textarea>
+    </div>
+    <div class="form-control">
+      <label>Image URL</label>
+      <input type="text" data-bind="imageUrl" />
+    </div>
+
+    <!-- Save and Cancel Buttons -->
+    <button data-on-click="sse('/posts/<%= post.id %>', {method: 'put'})">
+      Save
+    </button>
+    <button data-on-click="sse('/posts/<%= post.id %>/reset')">
+      Cancel
+    </button>
+  </div>
+</div>
+
+    <%= render post %>
+    <p>
+      <%= link_to "Show this post", post %>
+    </p>
+  <% end %>
+</div>
+
+<%= turbo_frame_tag :newx, src: new_post_path %>
+
+<%#= link_to 'NP', data: turbo_frame: {:newx} %>
+<%= link_to "New post", new_post_path %>
+
+

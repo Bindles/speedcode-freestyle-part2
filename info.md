@@ -48,3 +48,11 @@ fetch(url, {})
 docuemnt.getElementById('verhicleTable').innerHTML = text
 window.history.pushState({}, '', url);
 });
+
+
+<div id="chat_messages" data-turbo-stream="replace" data-turbo-stream-from="chat_message_template"></div>
+<template id="chat_message_template">
+<% @posts.each do |message| %>
+<p><%= message.content %></p>
+<% end %>
+</template>

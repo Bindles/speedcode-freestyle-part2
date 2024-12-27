@@ -21,19 +21,22 @@ class PostsController < ApplicationController
 
   # POST /posts or /posts.json
   def create
-    # @post = Post.new(post_params)
     @post = current_user.posts.build(post_params)
-
+  
     respond_to do |format|
       if @post.save
         format.html { redirect_to posts_path, notice: "Post was successfully created." }
-        format.json { render :index, status: :created, location: @post }
+        format.turbo_stream do
+          # Renders the index view to be inserted into the "posts" turbo frame
+          #render turbo_stream: turbo_stream.replace("posts", partial: "posts/posts", locals: { posts: Post.all })
+          render turbo_stream: turbo_stream.append("posts", partial: "posts/post", locals: { posts: Post.all, post: @post })          
+        end
       else
         format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @post.errors, status: :unprocessable_entity }
       end
     end
   end
+  
 
   # PATCH/PUT /posts/1 or /posts/1.json
   def update

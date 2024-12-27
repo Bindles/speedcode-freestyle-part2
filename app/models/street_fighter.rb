@@ -1,0 +1,2 @@
+class StreetFighter < ApplicationRecord
+end

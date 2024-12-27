@@ -1,0 +1,2 @@
+<!-- app/views/products/index.turbo_stream.erb -->
+<%= turbo_stream.update"product-grid", partial: "products/product_list", locals: { products: @products, page: @page } %>

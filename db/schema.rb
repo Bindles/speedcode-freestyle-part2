@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_23_210226) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_27_165116) do
   create_table "friendships", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "friend_id", null: false
@@ -19,6 +19,13 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_23_210226) do
     t.index ["friend_id"], name: "index_friendships_on_friend_id"
     t.index ["user_id", "friend_id"], name: "index_friendships_on_user_id_and_friend_id", unique: true
     t.index ["user_id"], name: "index_friendships_on_user_id"
+  end
+
+  create_table "items", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "messages", force: :cascade do |t|
@@ -39,6 +46,13 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_23_210226) do
     t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
+  create_table "products", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "profiles", force: :cascade do |t|
     t.integer "user_id", null: false
     t.text "bio"
@@ -51,6 +65,14 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_23_210226) do
     t.string "location"
     t.index ["user_id"], name: "index_profiles_on_user_id"
     t.index ["username"], name: "index_profiles_on_username", unique: true
+  end
+
+  create_table "street_fighters", force: :cascade do |t|
+    t.string "quote"
+    t.string "character"
+    t.string "move"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "tweets", force: :cascade do |t|

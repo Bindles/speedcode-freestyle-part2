@@ -1,0 +1,32 @@
+<%= form_with(model: street_fighter) do |form| %>
+  <% if street_fighter.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(street_fighter.errors.count, "error") %> prohibited this street_fighter from being saved:</h2>
+
+      <ul>
+        <% street_fighter.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :quote, style: "display: block" %>
+    <%= form.text_field :quote %>
+  </div>
+
+  <div>
+    <%= form.label :character, style: "display: block" %>
+    <%= form.text_field :character %>
+  </div>
+
+  <div>
+    <%= form.label :move, style: "display: block" %>
+    <%= form.text_field :move %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,83 @@
+<div class="container mx-auto p-6">
+  <% if @error %>
+    <div class="bg-red-100 text-red-800 p-4 rounded-lg shadow-md mb-6">
+      <p class="font-bold">Error:</p>
+      <p><%= @error %></p>
+    </div>
+  <% else %>
+    <h1 class="text-3xl font-bold text-gray-900 mb-6">Products</h1>
+
+    <ul class="space-y-8">
+      <% @products.each do |product| %>
+        <li class="bg-white rounded-lg shadow-md p-6">
+          <!-- Product Title -->
+          <h2 class="text-2xl font-semibold text-gray-800 mb-2"><%= product["title"] %></h2>
+
+          <!-- Vendor and Category -->
+          <p class="text-gray-600">Vendor: <span class="font-medium"><%= product["vendor"] %></span></p>
+          <p class="text-gray-600">Category: <span class="font-medium"><%= product["product_type"] || "N/A" %></span></p>
+
+          <!-- Description -->
+          <% if product["body_html"] %>
+            <p class="text-gray-700 mt-4 mb-4">
+              <%= truncate(strip_tags(product["body_html"].html_safe), length: 800) %>
+            </p>
+          <% end %>
+
+          <!-- Image -->
+          <% if product["images"] && product["images"].any? %>
+            <div class="flex justify-center mb-4">
+              <img id="thumbnail-<%= product["id"] %>" 
+                   src="<%= product["images"].first["src"] %>" 
+                   alt="<%= product["title"] %>" 
+                   class="rounded-lg max-h-64 object-cover">
+            </div>
+          <% end %>
+
+          <!-- Variants -->
+          <h3 class="text-lg font-semibold text-gray-900 mt-4">Variants</h3>
+          <select 
+            class="mt-2 p-2 border border-gray-300 rounded-lg w-full bg-white text-gray-800"
+            onchange="updateThumbnail('<%= product["id"] %>', this.value)">
+            <% product["variants"].each do |variant| %>
+              <option 
+                value="<%= variant["featured_image"] ? variant["featured_image"]["src"] : '' %>"
+                <%= "selected" if product["variants"].first == variant %>>
+                <%= variant["title"] %> - $<%= variant["price"] %> <%= variant["available"] ? "(In Stock)" : "(Out of Stock)" %>
+        <ul>
+
+            <li>
+              <strong><%= variant["title"] %></strong> - $<%= variant["price"] %>
+              <% if variant["available"] %>
+                <span style="color: green;">(In Stock)</span>
+              <% else %>
+                <span style="color: red;">(Out of Stock)</span>
+              <% end %>
+            </li>
+
+        </ul>                
+              </option>
+            <% end %>
+          </select>
+
+          <!-- Price and Add to Cart Button -->
+          <div class="mt-6 flex items-center justify-between">
+            <p class="text-xl font-bold text-gray-900">Starting at $<%= product["variants"].first["price"] %></p>
+            <button class="px-6 py-2 bg-indigo-600 text-white rounded-lg shadow-md hover:bg-indigo-700">
+              Add to Cart
+            </button>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+</div>
+
+<script>
+  function updateThumbnail(productId, imageUrl) {
+    const thumbnail = document.getElementById(`thumbnail-${productId}`);
+    if (thumbnail && imageUrl) {
+      thumbnail.src = imageUrl;
+    }
+  }
+</script>

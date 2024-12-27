@@ -1,0 +1,34 @@
+<!-- app/views/products/_product_list.html.erb -->
+<div class="ProductGrid">
+  <div id="results">
+    <div class="ProductGrid_page" id="page--<%= page %>">
+      <% products.each do |product| %>
+        <article class="ProductGrid_item">
+          <div class="ProductGrid_media">
+            <span><%= product.name %></span>
+          </div>
+          <data class="ProductGrid_price" value="<%= product.id %>">
+            <%= product.id + 1 %><small>.99</small>
+          </data>
+        </article>
+      <% end %>
+    </div>
+
+    <% if products.size == 10 %>
+      <div style="display: grid; place-content: center; padding-block: 2rem;">
+<%= link_to "Load More",
+      products_path(page: page + 1, format: :turbo_stream),
+      class: "ProductGrid_more",
+      id: "load-more-button",
+      data: { turbo_stream: true } %>
+      <br>
+      remote: true (removed)
+  </div>
+      </div>
+    <% else %>
+      <div style="text-align: center;">
+        <span class="code">The End</span>
+      </div>
+    <% end %>
+  </div>
+</div>
