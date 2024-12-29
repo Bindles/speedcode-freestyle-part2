@@ -1,4 +1,5 @@
 class PagesController < ApplicationController
+  before_action :setapples, only: [ :apples ]
   include HTTParty
 
   def index
@@ -18,5 +19,20 @@ class PagesController < ApplicationController
     end
   rescue StandardError => e
     @error = "Failed to fetch products: #{e.message}"
+  end
+
+  def apples
+    @apcount = session[:apcount]
+  end
+  def add
+    @apcount = session[:apcount] +=1
+  end
+  def remove
+    @apcount = session[:apcount] -=1
+  end
+
+  private
+  def setapples
+    session[:apcount] = 0
   end
 end

@@ -3,6 +3,9 @@ Rails.application.routes.draw do
   resources :products
   resources :items
   get "pagesindex" => "pages#index"
+  get "pages/apples" => "pages#apples"
+  post "pages/add" => "pages#add"
+  post "pages/remove" => "pages#remove"
   root "pages#index"
   resources :street_fighters
   resources :vehicles do
